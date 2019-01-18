@@ -12,6 +12,7 @@ var audio_samples_L = new Float32Array(SAMPLE_COUNT);
 var audio_samples_R = new Float32Array(SAMPLE_COUNT);
 var audio_write_cursor = 0, audio_read_cursor = 0;
 
+
 var nes = new jsnes.NES({
 	onFrame: function(framebuffer_24){
 		for(var i = 0; i < FRAMEBUFFER_SIZE; i++) framebuffer_u32[i] = 0xFF000000 | framebuffer_24[i];
@@ -55,7 +56,7 @@ function audio_callback(event){
 
 function keyboard(callback, event){
 	var player = 1;
-	switch(event.keyCode){
+	switch(event.keyCode) {
 		case 38: // UP
 			callback(player, jsnes.Controller.BUTTON_UP); break;
 		case 40: // Down
@@ -96,6 +97,62 @@ function nes_init(canvas_id){
 	var script_processor = audio_ctx.createScriptProcessor(AUDIO_BUFFERING, 0, 2);
 	script_processor.onaudioprocess = audio_callback;
 	script_processor.connect(audio_ctx.destination);
+
+	//set up controller:
+	let gamepad = new Gamepad()
+	gamepad.on('press', 'button_1', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_A)
+    	//console.log('button 1 was pressed!');
+	});
+	gamepad.on('release', 'button_1', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_A)
+	    //console.log('button 1 was released!');
+	});	
+	gamepad.on('press', 'button_2', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_B)
+	});
+	gamepad.on('release', 'button_2', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_B)
+	});		
+
+	gamepad.on('press', 'select', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_SELECT)
+	});
+	gamepad.on('release', 'select', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_SELECT)
+	});	
+	gamepad.on('press', 'start', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_START)
+	});
+	gamepad.on('release', 'start', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_START)
+	});	
+
+	gamepad.on('press', 'd_pad_up', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_UP)
+	});
+	gamepad.on('release', 'd_pad_up', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_UP)
+	});
+	gamepad.on('press', 'd_pad_down', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_DOWN)
+	});
+	gamepad.on('release', 'd_pad_down', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_DOWN)
+	});
+	gamepad.on('press', 'd_pad_left', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_LEFT)
+	});
+	gamepad.on('release', 'd_pad_left', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_LEFT)
+	});
+	gamepad.on('press', 'd_pad_right', () => {
+		nes.buttonDown(1 ,jsnes.Controller.BUTTON_RIGHT)
+	});
+	gamepad.on('release', 'd_pad_right', () => {
+		nes.buttonUp(1 ,jsnes.Controller.BUTTON_RIGHT)
+	});
+
 }
 
 function nes_boot(rom_data){
@@ -129,5 +186,5 @@ function nes_load_url(canvas_id, path){
 	req.send();
 }
 
-document.addEventListener('keydown', (event) => {keyboard(nes.buttonDown, event)});
-document.addEventListener('keyup', (event) => {keyboard(nes.buttonUp, event)});
+//document.addEventListener('keydown', (event) => {keyboard(nes.buttonDown, event)});
+//document.addEventListener('keyup', (event) => {keyboard(nes.buttonUp, event)});

@@ -27,5 +27,8 @@
     "prettier-check": "^2.0.0",
     "sinon": "^7.1.0",
     "webpack": "^3.9.1"
+  },
+  "dependencies": {
+    "yarn": "^1.13.0"
   }
 }
